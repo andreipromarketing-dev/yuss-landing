@@ -2555,5 +2555,37 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 })();
 </script>
 
+
+<script>
+(function(){
+  // При встраивании в iframe внутренний скролл отключён —
+  // перехватываем якоря и просим родительскую страницу проскроллить.
+  function scrollParentTo(el){
+    if (!el) return;
+    var y = el.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop || 0);
+    try { parent.postMessage({type:'uss-scroll', y: y}, '*'); } catch(e){}
+  }
+  document.addEventListener('click', function(e){
+    var a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
+    if (a){
+      var id = a.getAttribute('href').slice(1);
+      var target = document.getElementById(id);
+      if (target){
+        e.preventDefault();
+        e.stopPropagation();
+        scrollParentTo(target);
+      }
+      return;
+    }
+    var btn = e.target.closest ? e.target.closest('button[data-act="top"]') : null;
+    if (btn){
+      e.preventDefault();
+      e.stopPropagation();
+      scrollParentTo(document.body);
+    }
+  }, true);
+})();
+</script>
+
 </body>
 </html>
