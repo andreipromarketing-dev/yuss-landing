@@ -2541,5 +2541,19 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 </script>
 <!-- ==================== USS LANDING: END ==================== -->
 
+
+<script>
+(function(){
+  function send(){
+    var h = document.documentElement.scrollHeight || document.body.scrollHeight;
+    try { parent.postMessage({type:'uss-resize', height:h}, '*'); } catch(e){}
+  }
+  window.addEventListener('load', function(){ setTimeout(send,200); setTimeout(send,1200); });
+  window.addEventListener('resize', send);
+  if (window.ResizeObserver) { try { new ResizeObserver(send).observe(document.body); } catch(e){} }
+  setInterval(send, 2500);
+})();
+</script>
+
 </body>
 </html>
